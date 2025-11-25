@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สถิติคดีอาญา 5 กลุ่ม ภ.จว.ชัยนาท</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .table-container {
+            overflow-x: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        th, td {
+            white-space: nowrap;
+        }
+        /* Custom scrollbar for table */
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .table-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .table-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .sticky-col {
+            position: sticky;
+            left: 0;
+            background-color: white;
+            z-index: 10;
+        }
+        th.sticky-col {
+            background-color: #f8fafc;
+            z-index: 20;
+        }
+        .status-pass {
+            background-color: #dcfce7;
+            color: #166534;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+        .status-fail {
+            background-color: #fee2e2;
+            color: #991b1b;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Header Section -->
+    <div class="max-w-7xl mx-auto mb-8">
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                    <i data-lucide="bar-chart-2" class="text-blue-600"></i>
+                    สถิติคดีอาญา 5 กลุ่ม
+                </h1>
+                <p class="text-gray-500 mt-1">ภ.จว.ชัยนาท | ประจำเดือน พ.ย. 2568 (1 - 24 พ.ย. 68)</p>
+                <p class="text-xs text-gray-400 mt-1">ข้อมูล CRIMES ณ 25 พ.ย. 68 เวลา 09.00 น.</p>
+            </div>
+            <div class="flex gap-2">
+                <div class="relative">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+                    <input type="text" id="searchInput" placeholder="ค้นหา สภ..." class="pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-64">
+                </div>
+                <button onclick="window.print()" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors" title="พิมพ์รายงาน">
+                    <i data-lucide="printer" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards Summary (Example using Totals) -->
+    <div class="max-w-7xl mx-auto mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Card 1 -->
+        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4 text-white shadow-lg">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-blue-100 text-sm font-medium">กลุ่มที่ 1 (อุกฉกรรจ์)</p>
+                    <h3 class="text-2xl font-bold mt-1" id="sumG1">0 ราย</h3>
+                </div>
+                <div class="p-2 bg-white/20 rounded-lg">
+                    <i data-lucide="skull" class="w-5 h-5 text-white"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center gap-1 text-xs text-blue-100">
+                <span>จับกุมได้: <span class="font-bold" id="arrG1">0</span></span>
+                <span class="mx-1">•</span>
+                <span>เป้าหมาย: 90%</span>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl p-4 text-white shadow-lg">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-indigo-100 text-sm font-medium">กลุ่มที่ 2 (ชีวิต/ร่างกาย)</p>
+                    <h3 class="text-2xl font-bold mt-1" id="sumG2">0 ราย</h3>
+                </div>
+                <div class="p-2 bg-white/20 rounded-lg">
+                    <i data-lucide="heart-pulse" class="w-5 h-5 text-white"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center gap-1 text-xs text-indigo-100">
+                 <span>จับกุมได้: <span class="font-bold" id="arrG2">0</span></span>
+                 <span class="mx-1">•</span>
+                 <span>เป้าหมาย: 90%</span>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl p-4 text-white shadow-lg">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-emerald-100 text-sm font-medium">กลุ่มที่ 3 (ทรัพย์)</p>
+                    <h3 class="text-2xl font-bold mt-1" id="sumG3">0 ราย</h3>
+                </div>
+                <div class="p-2 bg-white/20 rounded-lg">
+                    <i data-lucide="home" class="w-5 h-5 text-white"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center gap-1 text-xs text-emerald-100">
+                <span>จับกุมได้: <span class="font-bold" id="arrG3">0</span></span>
+                 <span class="mx-1">•</span>
+                 <span>เป้าหมาย: 80%</span>
+            </div>
+        </div>
+        
+         <!-- Card 4 -->
+         <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-4 text-white shadow-lg">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-orange-100 text-sm font-medium">กลุ่มที่ 5 (รัฐเสียหาย)</p>
+                    <h3 class="text-2xl font-bold mt-1" id="sumG5">0 ราย</h3>
+                </div>
+                <div class="p-2 bg-white/20 rounded-lg">
+                    <i data-lucide="landmark" class="w-5 h-5 text-white"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center gap-1 text-xs text-orange-100">
+                <span>จับกุมได้: <span class="font-bold" id="arrG5">0</span></span>
+                <span class="mx-1">•</span>
+                <span>เป้าหมาย: 100%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Table -->
+    <div class="max-w-7xl mx-auto">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+                <h2 class="font-semibold text-gray-700">รายละเอียดรายสถานีตำรวจ (สภ.)</h2>
+                <div class="text-xs text-gray-500 bg-white px-2 py-1 rounded border">หน่วย: คดี</div>
+            </div>
+            
+            <div class="table-container w-full">
+                <table class="w-full text-sm text-left text-gray-600">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 border-b">
+                        <tr>
+                            <th scope="col" class="px-4 py-3 sticky-col text-center shadow-sm">ลำดับ</th>
+                            <th scope="col" class="px-4 py-3 sticky-col text-left shadow-sm border-r" style="left: 60px;">หน่วยงาน</th>
+                            
+                            <!-- Group 1 -->
+                            <th colspan="4" class="px-4 py-3 text-center bg-blue-50 border-r border-blue-100 text-blue-800">กลุ่มที่ 1 (อุกฉกรรจ์)</th>
+                            
+                            <!-- Group 2 -->
+                            <th colspan="4" class="px-4 py-3 text-center bg-indigo-50 border-r border-indigo-100 text-indigo-800">กลุ่มที่ 2 (ชีวิต/ร่างกาย)</th>
+
+                            <!-- Group 3 -->
+                            <th colspan="4" class="px-4 py-3 text-center bg-emerald-50 border-r border-emerald-100 text-emerald-800">กลุ่มที่ 3 (ทรัพย์)</th>
+
+                            <!-- Group 4 -->
+                            <th colspan="3" class="px-4 py-3 text-center bg-purple-50 border-r border-purple-100 text-purple-800">กลุ่มที่ 4 (น่าสนใจ)</th>
+
+                            <!-- Group 5 -->
+                            <th colspan="4" class="px-4 py-3 text-center bg-orange-50 text-orange-800">กลุ่มที่ 5 (รัฐเสียหาย)</th>
+                        </tr>
+                        <tr class="text-[10px] md:text-xs font-medium">
+                            <th class="px-4 py-2 sticky-col bg-gray-50"></th>
+                            <th class="px-4 py-2 sticky-col bg-gray-50 border-r" style="left: 60px;"></th>
+                            
+                            <!-- Sub headers G1 -->
+                            <th class="px-2 py-2 text-center bg-blue-50/50">รับแจ้ง</th>
+                            <th class="px-2 py-2 text-center bg-blue-50/50">จับกุม</th>
+                            <th class="px-2 py-2 text-center bg-blue-50/50 text-blue-700 font-bold">%</th>
+                            <th class="px-2 py-2 text-center bg-blue-50/50 border-r border-blue-100">สถานะ</th>
+
+                            <!-- Sub headers G2 -->
+                            <th class="px-2 py-2 text-center bg-indigo-50/50">รับแจ้ง</th>
+                            <th class="px-2 py-2 text-center bg-indigo-50/50">จับกุม</th>
+                            <th class="px-2 py-2 text-center bg-indigo-50/50 text-indigo-700 font-bold">%</th>
+                            <th class="px-2 py-2 text-center bg-indigo-50/50 border-r border-indigo-100">สถานะ</th>
+
+                             <!-- Sub headers G3 -->
+                             <th class="px-2 py-2 text-center bg-emerald-50/50">รับแจ้ง</th>
+                             <th class="px-2 py-2 text-center bg-emerald-50/50">จับกุม</th>
+                             <th class="px-2 py-2 text-center bg-emerald-50/50 text-emerald-700 font-bold">%</th>
+                             <th class="px-2 py-2 text-center bg-emerald-50/50 border-r border-emerald-100">สถานะ</th>
+
+                             <!-- Sub headers G4 -->
+                             <th class="px-2 py-2 text-center bg-purple-50/50">รับแจ้ง</th>
+                             <th class="px-2 py-2 text-center bg-purple-50/50">จับกุม</th>
+                             <th class="px-2 py-2 text-center bg-purple-50/50 border-r border-purple-100 text-purple-700 font-bold">%</th>
+                             
+                             <!-- Sub headers G5 -->
+                             <th class="px-2 py-2 text-center bg-orange-50/50">รับแจ้ง</th>
+                             <th class="px-2 py-2 text-center bg-orange-50/50">จับกุม</th>
+                             <th class="px-2 py-2 text-center bg-orange-50/50 text-orange-700 font-bold">%</th>
+                             <th class="px-2 py-2 text-center bg-orange-50/50">สถานะ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="bg-white">
+                        <!-- Rows will be injected here via JS -->
+                    </tbody>
+                    <tfoot id="tableFoot" class="bg-gray-100 font-bold border-t-2 border-gray-300">
+                         <!-- Total Row will be injected here via JS -->
+                    </tfoot>
+                </table>
+            </div>
+            <div class="p-4 bg-gray-50 border-t border-gray-200 text-xs text-gray-500 text-center">
+                * ข้อมูลนี้เป็นการแสดงผลจากหน้า Page 1 ของเอกสารต้นฉบับ
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data derived from the provided CSV/Text
+        // Structure: [Seq, Station, G1_Rec, G1_Arr, G1_Pct, G1_Status, ... same for G2, G3, G4(no status col in some view but putting pct), G5]
+        // Note: "-" in data is converted to 0 or appropriate empty string for display logic
+        
+        const rawData = [
+            { id: 1, name: "เมืองชัยนาท", g1: {rec:1, arr:1, pct:100, st:"ผ่าน"}, g2: {rec:2, arr:2, pct:100, st:"ผ่าน"}, g3: {rec:0, arr:0, pct:"-", st:"-"}, g4: {rec:5, arr:5, pct:100}, g5: {rec:11, arr:11, pct:100, st:"ผ่าน"} },
+            { id: 2, name: "สรรคบุรี",    g1: {rec:0, arr:0, pct:"-", st:"-"}, g2: {rec:2, arr:2, pct:100, st:"ผ่าน"}, g3: {rec:2, arr:2, pct:100, st:"ผ่าน"}, g4: {rec:10, arr:10, pct:100}, g5: {rec:15, arr:15, pct:100, st:"ไม่ผ่าน"} }, // Note: Data says Fail for G5 total row logic maybe? using text as is
+            { id: 3, name: "หันคา",      g1: {rec:0, arr:0, pct:"-", st:"-"}, g2: {rec:0, arr:0, pct:"-", st:"-"}, g3: {rec:1, arr:1, pct:100, st:"ผ่าน"}, g4: {rec:0, arr:0, pct:"-"}, g5: {rec:3, arr:3, pct:100, st:"ไม่ผ่าน"} },
+            { id: 4, name: "มโนรมย์",    g1: {rec:0, arr:0, pct:"-", st:"-"}, g2: {rec:0, arr:0, pct:"-", st:"-"}, g3: {rec:0, arr:0, pct:"-", st:"-"}, g4: {rec:2, arr:2, pct:100}, g5: {rec:3, arr:3, pct:100, st:"ไม่ผ่าน"} },
+            { id: 5, name: "วัดสิงห์",     g1: {rec:0, arr:0, pct:"-", st:"-"}, g2: {rec:1, arr:1, pct:100, st:"ผ่าน"}, g3: {rec:0, arr:0, pct:"-", st:"-"}, g4: {rec:1, arr:1, pct:100}, g5: {rec:6, arr:6, pct:100, st:"ไม่ผ่าน"} },
+            { id: 6, name: "สรรพยา",    g1: {rec:0, arr:0, pct:"-", st:"-"}, g2: {rec:1, arr:1, pct:100, st:"ผ่าน"}, g3: {rec:1, arr:1, pct:100, st:"ผ่าน"}, g4: {rec:2, arr:2, pct:100}, g5: {rec:7, arr:7, pct:100, st:"ไม่ผ่าน"} },
+            { id: 7, name: "หนองมะโมง", g1: {rec:0, arr:0, pct:"-", st:"-"}, g2: {rec:0, arr:0, pct:"-", st:"-"}, g3: {rec:0, arr:0, pct:"-", st:"-"}, g4: {rec:3, arr:3, pct:100}, g5: {rec:5, arr:5, pct:100, st:"ไม่ผ่าน"} },
+            { id: 8, name: "เนินขาม",    g1: {rec:0, arr:0, pct:"-", st:"-"}, g2: {rec:0, arr:0, pct:"-", st:"-"}, g3: {rec:2, arr:2, pct:100, st:"ผ่าน"}, g4: {rec:4, arr:4, pct:100}, g5: {rec:7, arr:7, pct:100, st:"ไม่ผ่าน"} },
+            { id: 9, name: "หางน้ำสาคร", g1: {rec:0, arr:0, pct:"-", st:"-"}, g2: {rec:0, arr:0, pct:"-", st:"-"}, g3: {rec:1, arr:1, pct:100, st:"ผ่าน"}, g4: {rec:3, arr:3, pct:100}, g5: {rec:5, arr:5, pct:100, st:"ไม่ผ่าน"} },
+            { id: 10, name: "ห้วยงู",     g1: {rec:0, arr:0, pct:"-", st:"-"}, g2: {rec:1, arr:1, pct:100, st:"ผ่าน"}, g3: {rec:0, arr:0, pct:"-", st:"-"}, g4: {rec:2, arr:2, pct:100}, g5: {rec:7, arr:7, pct:100, st:"ไม่ผ่าน"} },
+            { id: 11, name: "นางลือ",    g1: {rec:0, arr:0, pct:"-", st:"-"}, g2: {rec:0, arr:0, pct:"-", st:"-"}, g3: {rec:0, arr:0, pct:"-", st:"-"}, g4: {rec:2, arr:2, pct:100}, g5: {rec:5, arr:5, pct:100, st:"ไม่ผ่าน"} },
+            { id: 12, name: "หนองน้อย",  g1: {rec:0, arr:0, pct:"-", st:"-"}, g2: {rec:0, arr:0, pct:"-", st:"-"}, g3: {rec:0, arr:0, pct:"-", st:"-"}, g4: {rec:1, arr:1, pct:100}, g5: {rec:4, arr:4, pct:100, st:"ไม่ผ่าน"} },
+            { id: 13, name: "เขาแก้ว",   g1: {rec:0, arr:0, pct:"-", st:"-"}, g2: {rec:0, arr:0, pct:"-", st:"-"}, g3: {rec:0, arr:0, pct:"-", st:"-"}, g4: {rec:1, arr:1, pct:100}, g5: {rec:3, arr:3, pct:100, st:"ไม่ผ่าน"} },
+            { id: 14, name: "วังน้ำขาว",  g1: {rec:0, arr:0, pct:"-", st:"-"}, g2: {rec:0, arr:0, pct:"-", st:"-"}, g3: {rec:0, arr:0, pct:"-", st:"-"}, g4: {rec:0, arr:0, pct:"-"}, g5: {rec:2, arr:2, pct:100, st:"ไม่ผ่าน"} },
+        ];
+
+        const totalRow = { 
+            name: "ภ.จว.ชัยนาท", 
+            g1: {rec:1, arr:1, pct:100, st:"ผ่าน"}, 
+            g2: {rec:7, arr:7, pct:100, st:"ผ่าน"}, 
+            g3: {rec:7, arr:7, pct:100, st:"ผ่าน"}, 
+            g4: {rec:45, arr:45, pct:100}, 
+            g5: {rec:102, arr:102, pct:100, st:"ไม่ผ่าน"} // Data from footer row
+        };
+
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 border-b border-gray-100 transition-colors";
+                tr.innerHTML = `
+                    <td class="px-4 py-3 text-center sticky-col font-medium text-gray-500">${row.id}</td>
+                    <td class="px-4 py-3 font-medium text-gray-800 sticky-col border-r bg-white" style="left: 60px;">${row.name}</td>
+                    
+                    ${renderGroupCells(row.g1, 'blue')}
+                    ${renderGroupCells(row.g2, 'indigo')}
+                    ${renderGroupCells(row.g3, 'emerald')}
+                    ${renderGroupNoStatus(row.g4, 'purple')}
+                    ${renderGroupCells(row.g5, 'orange')}
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderFooter() {
+            const tfoot = document.getElementById('tableFoot');
+            const row = totalRow;
+            tfoot.innerHTML = `
+                <tr class="bg-gray-100">
+                     <td class="px-4 py-3 text-center sticky-col bg-gray-100"></td>
+                     <td class="px-4 py-3 sticky-col border-r bg-gray-100 text-gray-800" style="left: 60px;">${row.name}</td>
+                     
+                     ${renderGroupCells(row.g1, 'gray', true)}
+                     ${renderGroupCells(row.g2, 'gray', true)}
+                     ${renderGroupCells(row.g3, 'gray', true)}
+                     ${renderGroupNoStatus(row.g4, 'gray', true)}
+                     ${renderGroupCells(row.g5, 'gray', true)}
+                </tr>
+            `;
+
+            // Update Cards
+            document.getElementById('sumG1').innerText = (totalRow.g1.rec || 0) + " ราย";
+            document.getElementById('arrG1').innerText = (totalRow.g1.arr || 0);
+            
+            document.getElementById('sumG2').innerText = (totalRow.g2.rec || 0) + " ราย";
+            document.getElementById('arrG2').innerText = (totalRow.g2.arr || 0);
+
+            document.getElementById('sumG3').innerText = (totalRow.g3.rec || 0) + " ราย";
+            document.getElementById('arrG3').innerText = (totalRow.g3.arr || 0);
+
+            document.getElementById('sumG5').innerText = (totalRow.g5.rec || 0) + " ราย";
+            document.getElementById('arrG5').innerText = (totalRow.g5.arr || 0);
+        }
+
+        function renderGroupCells(group, colorClass, isFooter = false) {
+            const bgClass = isFooter ? '' : `bg-${colorClass}-50/10`;
+            const borderClass = `border-${colorClass}-100`;
+            const textClass = group.pct == 100 ? 'text-green-600' : (group.pct === '-' || group.pct === 0 ? 'text-gray-400' : 'text-red-500');
+            
+            let statusBadge = '-';
+            if (group.st === 'ผ่าน') statusBadge = '<span class="status-pass">ผ่าน</span>';
+            if (group.st === 'ไม่ผ่าน') statusBadge = '<span class="status-fail">ไม่ผ่าน</span>';
+
+            const rec = group.rec === 0 || group.rec === '-' ? '<span class="text-gray-300">-</span>' : group.rec;
+            const arr = group.arr === 0 || group.arr === '-' ? '<span class="text-gray-300">-</span>' : group.arr;
+            const pct = group.pct === '-' ? '-' : group.pct;
+
+            return `
+                <td class="px-2 py-3 text-center ${bgClass}">${rec}</td>
+                <td class="px-2 py-3 text-center ${bgClass}">${arr}</td>
+                <td class="px-2 py-3 text-center ${textClass} font-semibold ${bgClass}">${pct}</td>
+                <td class="px-2 py-3 text-center border-r ${borderClass} ${bgClass}">${statusBadge}</td>
+            `;
+        }
+
+        function renderGroupNoStatus(group, colorClass, isFooter = false) {
+            const bgClass = isFooter ? '' : `bg-${colorClass}-50/10`;
+            const borderClass = `border-${colorClass}-100`;
+            const textClass = group.pct == 100 ? 'text-green-600' : (group.pct === '-' ? 'text-gray-400' : 'text-gray-600');
+            
+            const rec = group.rec === 0 || group.rec === '-' ? '<span class="text-gray-300">-</span>' : group.rec;
+            const arr = group.arr === 0 || group.arr === '-' ? '<span class="text-gray-300">-</span>' : group.arr;
+            const pct = group.pct === '-' ? '-' : group.pct;
+
+            return `
+                <td class="px-2 py-3 text-center ${bgClass}">${rec}</td>
+                <td class="px-2 py-3 text-center ${bgClass}">${arr}</td>
+                <td class="px-2 py-3 text-center border-r ${borderClass} ${textClass} font-semibold ${bgClass}">${pct}</td>
+            `;
+        }
+
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Initial Render
+        renderTable(rawData);
+        renderFooter();
+
+        // Search Functionality
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            const term = e.target.value.toLowerCase();
+            const filtered = rawData.filter(row => row.name.includes(term));
+            renderTable(filtered);
+        });
+
+    </script>
+</body>
+</html>
